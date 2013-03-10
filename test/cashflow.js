@@ -13,9 +13,10 @@ describe('Cashflow', function() {
 	});
 
 	describe('between Feb 11th and 21th', function() {
-		it('balance lasts on 4.89', function(done) {
+		it('balances were updated', function(done) {
 			Cashflow.getAll('2/11/2013', '2/21/2013', function(err, results) {
-				results[6].balance.should.eql(4.89);
+				results[6].balance['Panna'].should.eql(4.89);
+				results[6].balance['Univ'].should.eql(7318.37);
 				done();
 			});
 		});

@@ -12,19 +12,28 @@
 		return this;
 	};
 
+	var applyMovement = function(balances, amount, account, counterpart) {
+		balances[account] += amount;
+		balances[account] = Math.round(balances[account]*100)/100;
+		if(typeof counterpart !== undefined) {
+			balances[counterpart] -= amount;
+			balances[counterpart] = Math.round(balances[counterpart]*100)/100;			
+		}
+		return balances;
+	};
+
 	Cashflow.getAll = function(from, to, callback) {
-		model.getBalances(from, function(err, balancesBefore) {			
+		model.getBalances(from, function(err, balances) {			
 			model.getMovements(from, to, function(err, movements) {
 				var result = [];
-				var balance = balancesBefore[0].balance;
 				for(var i = 0; i<movements.length; i++) {
 					var movement = movements[i];
-					balance = Math.round((balance+movement.amount)*100)/100;
+					balances = applyMovement(balances, movement.amount, movement.account, movement.counterpart);
 					result.push(new Cashflow(
 						movement.date,
 						movement.description,
 						movement.amount,
-						balance));
+						balances));
 				}
 
 				callback(null, result);
