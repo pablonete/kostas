@@ -1,10 +1,12 @@
 (function() {
 	var model;
-	var Cashflow = function(date, description, amount, balance) {
-		this.date = date;
-		this.description = description;
-		this.amount = amount;
-		this.balance = balance;
+	var Cashflow = function(movement, balances) {
+		this.date = movement.date;
+		this.description = movement.description;
+		this.amount = movement.amount;
+		this.account = movement.account;
+		this.counterpart = movement.counterpart;
+		this.balances = balances;
 	};
 
 	Cashflow.init = function (modelArg) {
@@ -13,13 +15,17 @@
 	};
 
 	var applyMovement = function(balances, amount, account, counterpart) {
-		balances[account] += amount;
-		balances[account] = Math.round(balances[account]*100)/100;
-		if(typeof counterpart !== undefined) {
-			balances[counterpart] -= amount;
-			balances[counterpart] = Math.round(balances[counterpart]*100)/100;			
+		var result = {};
+		for(var balanceAccount in balances) {
+			var factor =
+				balanceAccount === account
+					? 1
+					: balanceAccount === counterpart
+						? -1
+						: 0;
+			result[balanceAccount] = Math.round((balances[balanceAccount] + factor*amount)*100)/100;			
 		}
-		return balances;
+		return result;
 	};
 
 	Cashflow.getAll = function(from, to, callback) {
@@ -29,11 +35,7 @@
 				for(var i = 0; i<movements.length; i++) {
 					var movement = movements[i];
 					balances = applyMovement(balances, movement.amount, movement.account, movement.counterpart);
-					result.push(new Cashflow(
-						movement.date,
-						movement.description,
-						movement.amount,
-						balances));
+					result.push(new Cashflow(movement, balances));
 				}
 
 				callback(null, result);

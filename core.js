@@ -1,6 +1,8 @@
 var app = require('express')(),
 	jade = require('jade'),
-	model = require('./models/models.js');
+	//model = require('./models/model-in-memory.js'),
+	model = require('./test/movement_mock.js'),
+	Cashflow = require('./models/cashflow.js').init(model);
 
 app.set('view engine', 'jade');
 app.set('view options', {layout: false});
@@ -18,9 +20,9 @@ app.get('/api', function(req, res) {
 });
 
 app.get('/api/cashflow', function(req, res) {
-	return model.getAll(function(err, products) {
+	return Cashflow.getAll(req.query["from"], req.query["to"], function(err, lines) {
 		if(!err)
-			res.send(products);
+			res.send(lines);
 		else
 			console.log(err);
 	});
