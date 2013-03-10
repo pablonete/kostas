@@ -1,5 +1,6 @@
 var app = require('express')(),
-	jade = require('jade');
+	jade = require('jade'),
+	model = require('./models/models.js');
 
 app.set('view engine', 'jade');
 app.set('view options', {layout: false});
@@ -14,6 +15,15 @@ app.get('/', function(req, res) {
 
 app.get('/api', function(req, res) {
 	res.send('Kostas API is running');
+});
+
+app.get('/api/cashflow', function(req, res) {
+	return model.getAll(function(err, products) {
+		if(!err)
+			res.send(products);
+		else
+			console.log(err);
+	});
 });
 
 app.listen(8000);

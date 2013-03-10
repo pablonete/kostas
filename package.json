@@ -1,0 +1,27 @@
+{
+  "name": "kostas",
+  "version": "0.0.1",
+  "description": "Kostas Accounting, personal management of bank movements.",
+  "main": "core.js",
+  "scripts": {
+    "test": "mocha test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pablonete/kostas.git"
+  },
+  "keywords": [
+    "kostas",
+    "accounting",
+    "node",
+    "budget"
+  ],
+  "author": "Pablo Nunez",
+  "license": "BSD",
+  "readmeFilename": "Readme.md",
+  "gitHead": "4bf00ea819593555250abdeadd47d18cfefd0036",
+  "devDependencies": {
+    "mocha": "",
+    "should": ""
+  }
+}
